@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Storefront.Ordering.API.Extensions.DependencyInjection;
 using Storefront.Ordering.API.Filters;
 using Storefront.Ordering.Domain.Repositories;
 using Storefront.Ordering.Infrastructure.AmazonS3;
@@ -36,6 +37,8 @@ namespace Storefront.Ordering.API
                 options.Filters.Add(new ModelValidationAttribute());
             });
 
+            services.AddJwtAuthentication(Configuration.GetSection("Authorization"));
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy => policy
@@ -56,6 +59,7 @@ namespace Storefront.Ordering.API
             }
 
             app.UseCors();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
