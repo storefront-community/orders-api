@@ -37,16 +37,8 @@ namespace Storefront.Ordering.API
                 options.Filters.Add(new ModelValidationAttribute());
             });
 
+            services.AddDefaultCorsPolicy();
             services.AddJwtAuthentication(Configuration.GetSection("Authorization"));
-
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(policy => policy
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
 
             services.AddTransient<IPhotoRepository, AmazonS3Api>();
         }
