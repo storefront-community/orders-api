@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Storefront.Ordering.Domain.Repositories;
+using Storefront.Ordering.Infrastructure.AmazonS3;
+using Storefront.Ordering.Infrastructure.Database;
 
 namespace Storefront.Ordering.API
 {
@@ -16,7 +20,19 @@ namespace Storefront.Ordering.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AmazonS3Options>(Configuration.GetSection("AmazonS3"));
+
+            services.AddDbContext<ApiDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration["ConnectionString:PostgreSQL"], pgsql =>
+                {
+                    pgsql.MigrationsHistoryTable(tableName: "__migration_history", schema: ApiDbContext.Schema);
+                });
+            });
+
             services.AddMvc();
+
+            services.AddTransient<IPhotoRepository, AmazonS3Api>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
