@@ -36,6 +36,15 @@ namespace Storefront.Ordering.API
                 options.Filters.Add(new ModelValidationAttribute());
             });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy => policy
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
             services.AddTransient<IPhotoRepository, AmazonS3Api>();
         }
 
@@ -46,6 +55,7 @@ namespace Storefront.Ordering.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors();
             app.UseMvc();
         }
     }
