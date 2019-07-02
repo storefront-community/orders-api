@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Storefront.Ordering.API.Filters;
 using Storefront.Ordering.Domain.Repositories;
 using Storefront.Ordering.Infrastructure.AmazonS3;
 using Storefront.Ordering.Infrastructure.Database;
@@ -30,7 +31,10 @@ namespace Storefront.Ordering.API
                 });
             });
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new ModelValidationAttribute());
+            });
 
             services.AddTransient<IPhotoRepository, AmazonS3Api>();
         }
