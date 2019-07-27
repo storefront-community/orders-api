@@ -12,6 +12,7 @@ namespace Storefront.Ordering.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://localhost:7001")
                 .UseStartup<Startup>();
     }
 }
