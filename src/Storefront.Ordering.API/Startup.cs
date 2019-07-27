@@ -36,7 +36,7 @@ namespace Storefront.Ordering.API
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(new ModelValidationAttribute());
+                options.Filters.Add(new ModelValidationFilter());
             });
 
             services.AddDefaultCorsPolicy();

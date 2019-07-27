@@ -1,16 +1,18 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Storefront.Ordering.API.Models.Errors;
+using Storefront.Ordering.API.Models.TransferModel;
 
 namespace Storefront.Ordering.API.Filters
 {
-    public sealed class ModelValidationAttribute : ActionFilterAttribute
+    [ExcludeFromCodeCoverage]
+    public sealed class ModelValidationFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.ActionArguments.Any(arg => arg.Value == null))
             {
-                filterContext.Result = new BadRequestError("Request body cannot be blank.");
+                filterContext.Result = new BadRequestJson("Request body cannot be blank.");
             }
             else if (!filterContext.ModelState.IsValid)
             {
@@ -19,7 +21,7 @@ namespace Storefront.Ordering.API.Filters
                     .Select(e => new ModelErrorMessage(e))
                     .ToList();
 
-                filterContext.Result = new BadRequestError(errors);
+                filterContext.Result = new BadRequestJson(errors);
             }
         }
     }
