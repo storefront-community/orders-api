@@ -1,32 +1,34 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Storefront.Ordering.API.Extensions.DependencyInjection;
+using Storefront.Ordering.API.Authorization;
 using Storefront.Ordering.API.Filters;
-using Storefront.Ordering.Domain.Repositories;
-using Storefront.Ordering.Infrastructure.AmazonS3;
-using Storefront.Ordering.Infrastructure.Database;
+using Storefront.Ordering.API.Models.DataModel;
+using Storefront.Ordering.API.Models.IntegrationModel.FileStorage;
+using Storefront.Ordering.API.Models.IntegrationModel.FileStorage.AmazonS3;
 
 namespace Storefront.Ordering.API
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
+        public readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AmazonS3Options>(Configuration.GetSection("AmazonS3"));
+            services.Configure<AmazonS3Options>(_configuration.GetSection("AmazonS3"));
 
             services.AddDbContext<ApiDbContext>(options =>
             {
-                options.UseNpgsql(Configuration["ConnectionString:PostgreSQL"], pgsql =>
+                options.UseNpgsql(_configuration["ConnectionString:PostgreSQL"], pgsql =>
                 {
                     pgsql.MigrationsHistoryTable(tableName: "__migration_history", schema: ApiDbContext.Schema);
                 });
@@ -38,9 +40,10 @@ namespace Storefront.Ordering.API
             });
 
             services.AddDefaultCorsPolicy();
-            services.AddJwtAuthentication(Configuration.GetSection("Authorization"));
 
-            services.AddTransient<IPhotoRepository, AmazonS3Api>();
+            services.AddJwtAuthentication(_configuration.GetSection("Auth"));
+
+            services.AddTransient<IFileStorage, AmazonS3Bucket>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

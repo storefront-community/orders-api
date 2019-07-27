@@ -1,17 +1,17 @@
 using System;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Storefront.Ordering.API.Authorization;
 
-namespace Storefront.Ordering.API.Extensions.DependencyInjection
+namespace Storefront.Ordering.API.Authorization
 {
     public static class JwtExtensions
     {
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ApiTokenOptions>(configuration);
+            services.Configure<JwtOptions>(configuration);
 
             services.AddAuthentication(options =>
             {
@@ -22,9 +22,13 @@ namespace Storefront.Ordering.API.Extensions.DependencyInjection
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = configuration["Issuer"],
-                    ValidAudience = configuration["Audience"],
-                    IssuerSigningKey = new ApiSecurityKey(configuration["Secret"]),
+                    ValidIssuer = configuration[nameof(JwtOptions.Issuer)],
+                    ValidAudience = configuration[nameof(JwtOptions.Audience)],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        key: Encoding.ASCII.GetBytes(
+                            configuration[nameof(JwtOptions.Secret)]
+                        )
+                    ),
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
@@ -35,5 +39,4 @@ namespace Storefront.Ordering.API.Extensions.DependencyInjection
             });
         }
     }
-
 }

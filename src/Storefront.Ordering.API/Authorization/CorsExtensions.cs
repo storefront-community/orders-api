@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Storefront.Ordering.API.Extensions.DependencyInjection
+namespace Storefront.Ordering.API.Authorization
 {
     public static class CorsExtensions
     {
