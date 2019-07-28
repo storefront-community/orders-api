@@ -33,6 +33,10 @@ Properties/
 Settings/
 TestResults/
 coverage/
+#######################
+# Configuration files #
+#######################
+appsettings.Development.json
 ###################
 # Web publish log #
 ###################
