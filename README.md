@@ -11,8 +11,8 @@ RESTful API for ordering control covering the features:
 
 ## Status
 
-[![CircleCI](https://circleci.com/gh/storefront-community/orders-api.svg?style=shield&circle-token=3a9cee53112f55c417a6052e72a80ce1368f0e70)](https://circleci.com/gh/storefront-community/orders-api)
-[![codecov](https://codecov.io/gh/storefront-community/orders-api/branch/master/graph/badge.svg?token=P5BlU6DEOF)](https://codecov.io/gh/storefront-community/orders-api)
+[![CircleCI](https://circleci.com/gh/storefront-community/orders-api.svg?style=shield)](https://circleci.com/gh/storefront-community/orders-api)
+[![codecov](https://codecov.io/gh/storefront-community/orders-api/branch/master/graph/badge.svg)](https://codecov.io/gh/storefront-community/orders-api)
 
 ## How to use
 
